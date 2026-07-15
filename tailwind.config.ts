@@ -11,63 +11,54 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-space-grotesk)", "sans-serif"],
-        mono: ["var(--font-space-mono)", "monospace"],
+        sans: ["var(--font-instrument)", "sans-serif"],
+        display: ["var(--font-bricolage)", "sans-serif"],
+        mono: ["var(--font-jetbrains)", "monospace"],
       },
       colors: {
-        bg: "#07070F",
-        "bg-2": "#0D0D1A",
-        neon: {
-          cyan: "#00F5FF",
-          pink: "#FF00E5",
-          purple: "#9D00FF",
-          green: "#00FF94",
+        paper: "rgb(var(--c-paper) / <alpha-value>)",
+        surface: "rgb(var(--c-surface) / <alpha-value>)",
+        ink: "rgb(var(--c-ink) / <alpha-value>)",
+        shell: "rgb(var(--c-shell) / <alpha-value>)",
+        muted: "rgb(var(--c-muted) / <alpha-value>)",
+        line: "rgb(var(--c-line) / <alpha-value>)",
+        cobalt: {
+          DEFAULT: "rgb(var(--c-cobalt) / <alpha-value>)",
+          dark: "rgb(var(--c-cobalt-dark) / <alpha-value>)",
+          soft: "var(--c-cobalt-soft)",
         },
-        glass: "rgba(255,255,255,0.04)",
-      },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-        "neon-gradient": "linear-gradient(135deg, #00F5FF, #FF00E5)",
-        "neon-gradient-2": "linear-gradient(135deg, #9D00FF, #00F5FF)",
-      },
-      animation: {
-        "glitch": "glitch 1s infinite",
-        "float": "float 6s ease-in-out infinite",
-        "pulse-neon": "pulseNeon 2s ease-in-out infinite",
-        "spin-slow": "spin 8s linear infinite",
-        "bounce-slow": "bounce 3s ease-in-out infinite",
-        "shimmer": "shimmer 2s linear infinite",
-      },
-      keyframes: {
-        glitch: {
-          "0%, 100%": { textShadow: "2px 0 #00F5FF, -2px 0 #FF00E5" },
-          "25%": { textShadow: "-2px 0 #00F5FF, 2px 0 #FF00E5" },
-          "50%": { textShadow: "2px 2px #9D00FF, -2px -2px #00F5FF" },
-          "75%": { textShadow: "-2px -2px #FF00E5, 2px 2px #9D00FF" },
+        coral: {
+          DEFAULT: "rgb(var(--c-coral) / <alpha-value>)",
+          deep: "rgb(var(--c-coral-deep) / <alpha-value>)",
+          soft: "var(--c-coral-soft)",
         },
-        float: {
-          "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-20px)" },
+        mint: {
+          DEFAULT: "rgb(var(--c-mint) / <alpha-value>)",
+          deep: "rgb(var(--c-mint-deep) / <alpha-value>)",
+          soft: "var(--c-mint-soft)",
         },
-        pulseNeon: {
-          "0%, 100%": { boxShadow: "0 0 5px #00F5FF, 0 0 20px #00F5FF40" },
-          "50%": { boxShadow: "0 0 20px #00F5FF, 0 0 60px #00F5FF60" },
-        },
-        shimmer: {
-          "0%": { backgroundPosition: "-200% 0" },
-          "100%": { backgroundPosition: "200% 0" },
-        },
+        violet: "rgb(var(--c-violet) / <alpha-value>)",
       },
       boxShadow: {
-        "neon-cyan": "0 0 15px #00F5FF50, 0 0 40px #00F5FF20",
-        "neon-pink": "0 0 15px #FF00E550, 0 0 40px #FF00E520",
-        "neon-purple": "0 0 15px #9D00FF50, 0 0 40px #9D00FF20",
-        "glass": "0 8px 32px rgba(0,0,0,0.4)",
+        card: "0 1px 2px rgba(5,8,18,0.05), 0 8px 24px -8px rgba(5,8,18,0.10)",
+        lift: "0 2px 4px rgba(5,8,18,0.06), 0 16px 40px -12px rgba(5,8,18,0.20)",
+        window: "0 24px 60px -20px rgba(5,8,18,0.45)",
+        glow: "0 8px 32px -6px rgb(var(--c-cobalt) / 0.45)",
       },
-      backdropBlur: {
-        xs: "2px",
+      animation: {
+        float: "float 5s ease-in-out infinite",
+        "spin-slow": "spin 16s linear infinite",
+        "spin-slower": "spin-reverse 24s linear infinite",
+      },
+      keyframes: {
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        "spin-reverse": {
+          from: { transform: "rotate(360deg)" },
+          to: { transform: "rotate(0deg)" },
+        },
       },
     },
   },

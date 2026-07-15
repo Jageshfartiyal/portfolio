@@ -2,47 +2,113 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import TiltCard from "@/components/TiltCard";
+import {
+  PanelsTopLeft,
+  Server,
+  AppWindow,
+  CloudCog,
+  Plug,
+  Wrench,
+  type LucideIcon,
+} from "lucide-react";
 
-const categories = [
+type Category = {
+  label: string;
+  icon: LucideIcon;
+  iconBg: string;
+  iconColor: string;
+  skills: string[];
+};
+
+const categories: Category[] = [
   {
     label: "Frontend",
-    color: "neon-cyan",
-    borderColor: "border-neon-cyan/30",
-    textColor: "text-neon-cyan",
-    bgColor: "bg-neon-cyan/5",
-    glowClass: "glow-cyan",
-    icon: "⚛️",
-    skills: ["React.js", "JavaScript", "TypeScript", "HTML5", "CSS3", "Next.js"],
+    icon: PanelsTopLeft,
+    iconBg: "bg-cobalt-soft",
+    iconColor: "text-cobalt",
+    skills: [
+      "React.js",
+      "TypeScript",
+      "JavaScript (ES6+)",
+      "Redux",
+      "Context API",
+      "React Router",
+      "HTML5",
+      "CSS3",
+      "Bootstrap",
+    ],
   },
   {
     label: "Backend",
-    color: "neon-pink",
-    borderColor: "border-neon-pink/30",
-    textColor: "text-neon-pink",
-    bgColor: "bg-neon-pink/5",
-    glowClass: "glow-pink",
-    icon: "⚙️",
-    skills: ["Node.js", "Express.js", "NestJS", "REST APIs", "GraphQL"],
+    icon: Server,
+    iconBg: "bg-coral-soft",
+    iconColor: "text-coral-deep",
+    skills: [
+      "Node.js",
+      "Express.js",
+      "NestJS",
+      "REST APIs",
+      "WebSockets",
+      "Webhooks",
+    ],
   },
   {
-    label: "Database",
-    color: "neon-purple",
-    borderColor: "border-neon-purple/30",
-    textColor: "text-neon-purple",
-    bgColor: "bg-neon-purple/5",
-    glowClass: "glow-purple",
-    icon: "🗄️",
-    skills: ["MongoDB", "SQL", "Mongoose"],
+    label: "Desktop",
+    icon: AppWindow,
+    iconBg: "bg-mint-soft",
+    iconColor: "text-mint-deep",
+    skills: [
+      "Electron.js",
+      "Cross-Platform Apps",
+      "Desktop Packaging",
+      "Code Signing",
+      "Auto Updates",
+      "Version Management",
+    ],
   },
   {
-    label: "Tools",
-    color: "neon-green",
-    borderColor: "border-neon-green/30",
-    textColor: "text-neon-green",
-    bgColor: "bg-neon-green/5",
-    glowClass: "",
-    icon: "🔧",
-    skills: ["Git", "GitHub", "Stripe", "HubSpot API", "Digital Ocean", "Postman"],
+    label: "Database & Cloud",
+    icon: CloudCog,
+    iconBg: "bg-cobalt-soft",
+    iconColor: "text-cobalt",
+    skills: [
+      "MongoDB",
+      "SQL",
+      "AWS S3",
+      "DigitalOcean",
+      "Docker",
+      "Kafka",
+      "Nginx",
+    ],
+  },
+  {
+    label: "Integrations",
+    icon: Plug,
+    iconBg: "bg-coral-soft",
+    iconColor: "text-coral-deep",
+    skills: [
+      "Stripe",
+      "HubSpot APIs",
+      "Webhooks",
+      "Event-Driven Architecture",
+    ],
+  },
+  {
+    label: "Tools & Workflow",
+    icon: Wrench,
+    iconBg: "bg-mint-soft",
+    iconColor: "text-mint-deep",
+    skills: [
+      "Git",
+      "GitHub",
+      "SonarQube",
+      "ESBuild",
+      "Prettier",
+      "GitHub Copilot",
+      "Agile Scrum",
+      "Code Reviews",
+    ],
   },
 ];
 
@@ -50,19 +116,14 @@ const containerVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.15,
+      staggerChildren: 0.1,
     },
   },
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
-
-const pillVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: { opacity: 1, scale: 1 },
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.45 } },
 };
 
 export default function Skills() {
@@ -79,10 +140,10 @@ export default function Skills() {
           transition={{ duration: 0.5 }}
           className="flex items-center gap-3 mb-4"
         >
-          <span className="text-xs font-mono text-neon-cyan tracking-[0.3em] uppercase">
-            02. Skills
+          <span className="text-[11px] font-mono text-muted tracking-[0.3em] uppercase">
+            Stack
           </span>
-          <div className="flex-1 h-px bg-gradient-to-r from-neon-cyan/30 to-transparent max-w-xs" />
+          <div className="flex-1 h-px bg-line max-w-xs" />
         </motion.div>
 
         <motion.div
@@ -91,11 +152,12 @@ export default function Skills() {
           transition={{ delay: 0.1 }}
           className="mb-14"
         >
-          <h2 className="text-4xl md:text-5xl font-black text-white">
-            My <span className="gradient-text">Tech Stack</span>
+          <h2 className="font-display text-4xl md:text-5xl font-extrabold tracking-tight text-ink">
+            What I <span className="text-gradient">work with</span>
           </h2>
-          <p className="text-white/40 mt-3 max-w-md">
-            Tools and technologies I use to bring ideas to life.
+          <p className="text-muted mt-3 max-w-md">
+            The technologies I use to ship production software — from browser
+            to server to desktop.
           </p>
         </motion.div>
 
@@ -103,69 +165,68 @@ export default function Skills() {
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="grid sm:grid-cols-2 xl:grid-cols-4 gap-6"
+          className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5"
         >
           {categories.map((cat) => (
-            <motion.div
-              key={cat.label}
-              variants={cardVariants}
-              className={`glass-card rounded-2xl p-6 border ${cat.borderColor} hover:${cat.glowClass} transition-all duration-300 group`}
-              whileHover={{ y: -4 }}
-            >
+            <motion.div key={cat.label} variants={cardVariants}>
+              <TiltCard
+                max={6}
+                className="card shadow-card p-6 hover:shadow-lift transition-shadow duration-300"
+              >
               {/* Header */}
               <div className="flex items-center gap-3 mb-5">
-                <span className="text-2xl">{cat.icon}</span>
+                <span className={`w-10 h-10 rounded-xl ${cat.iconBg} flex items-center justify-center`}>
+                  <cat.icon size={18} className={cat.iconColor} />
+                </span>
                 <div>
-                  <h3 className={`text-sm font-bold tracking-widest uppercase ${cat.textColor}`}>
+                  <h3 className="font-display text-sm font-bold tracking-wide uppercase text-ink">
                     {cat.label}
                   </h3>
-                  <p className="text-white/30 text-xs mt-0.5">
+                  <p className="text-muted/70 text-xs mt-0.5">
                     {cat.skills.length} technologies
                   </p>
                 </div>
               </div>
 
               {/* Divider */}
-              <div className={`h-px ${cat.bgColor} mb-5 ${cat.borderColor} border-t`} />
+              <div className="h-px bg-line mb-5" />
 
               {/* Pills */}
-              <motion.div
-                className="flex flex-wrap gap-2"
-                variants={containerVariants}
-              >
-                {cat.skills.map((skill, i) => (
-                  <motion.span
+              <div className="flex flex-wrap gap-2">
+                {cat.skills.map((skill) => (
+                  <span
                     key={skill}
-                    variants={pillVariants}
-                    transition={{ delay: i * 0.05 }}
-                    className={`skill-pill text-xs font-mono px-3 py-1.5 rounded-full ${cat.bgColor} ${cat.textColor} border ${cat.borderColor} hover:scale-105`}
-                    style={{ cursor: "default" }}
+                    className="text-xs font-mono px-3 py-1.5 rounded-full bg-paper border border-line text-ink/80"
                   >
                     {skill}
-                  </motion.span>
+                  </span>
                 ))}
-              </motion.div>
+              </div>
+              </TiltCard>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Decorative bottom row */}
+        {/* Development practices */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ delay: 0.8 }}
           className="mt-12 flex flex-wrap justify-center gap-3"
         >
-          {["Always learning", "Problem solver", "Clean code advocate", "API design lover"].map(
-            (tag) => (
-              <span
-                key={tag}
-                className="text-xs font-mono text-white/25 border border-white/10 px-4 py-2 rounded-full"
-              >
-                {tag}
-              </span>
-            )
-          )}
+          {[
+            "Performance Optimization",
+            "Requirement Gathering",
+            "Client Communication",
+            "Mentoring Junior Developers",
+          ].map((tag) => (
+            <span
+              key={tag}
+              className="text-xs font-mono text-muted border border-line bg-surface px-4 py-2 rounded-full"
+            >
+              {tag}
+            </span>
+          ))}
         </motion.div>
       </div>
     </section>
