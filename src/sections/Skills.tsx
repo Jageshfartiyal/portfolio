@@ -2,36 +2,21 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import TiltCard from "@/components/TiltCard";
-import {
-  PanelsTopLeft,
-  Server,
-  AppWindow,
-  CloudCog,
-  Plug,
-  Wrench,
-  type LucideIcon,
-} from "lucide-react";
+import SectionHead from "@/components/SectionHead";
 
-type Category = {
-  label: string;
-  icon: LucideIcon;
-  iconBg: string;
-  iconColor: string;
-  skills: string[];
-};
+/*
+  Rendered as a manifest rather than a wall of badges. `core` is what gets
+  used most weeks — highlighting it turns a flat list into a signal about
+  depth, which is the thing a hiring manager is actually reading for.
+*/
+type Group = { name: string; core: string[]; rest: string[] };
 
-const categories: Category[] = [
+const manifest: Group[] = [
   {
-    label: "Frontend",
-    icon: PanelsTopLeft,
-    iconBg: "bg-cobalt-soft",
-    iconColor: "text-cobalt",
-    skills: [
-      "React.js",
-      "TypeScript",
+    name: "frontend",
+    core: ["React.js", "TypeScript", "Redux"],
+    rest: [
       "JavaScript (ES6+)",
-      "Redux",
       "Context API",
       "React Router",
       "HTML5",
@@ -40,192 +25,112 @@ const categories: Category[] = [
     ],
   },
   {
-    label: "Backend",
-    icon: Server,
-    iconBg: "bg-coral-soft",
-    iconColor: "text-coral-deep",
-    skills: [
-      "Node.js",
-      "Express.js",
-      "NestJS",
-      "REST APIs",
-      "WebSockets",
-      "Webhooks",
+    name: "backend",
+    core: ["Node.js", "NestJS", "REST APIs"],
+    rest: ["Express.js", "WebSockets", "Webhooks"],
+  },
+  {
+    name: "desktop",
+    core: ["Electron.js", "Code signing", "Auto updates"],
+    rest: [
+      "Cross-platform builds",
+      "Desktop packaging",
+      "Version management",
     ],
   },
   {
-    label: "Desktop",
-    icon: AppWindow,
-    iconBg: "bg-mint-soft",
-    iconColor: "text-mint-deep",
-    skills: [
-      "Electron.js",
-      "Cross-Platform Apps",
-      "Desktop Packaging",
-      "Code Signing",
-      "Auto Updates",
-      "Version Management",
-    ],
+    name: "data & cloud",
+    core: ["MongoDB", "AWS S3", "Docker"],
+    rest: ["SQL", "DigitalOcean", "Kafka", "Nginx"],
   },
   {
-    label: "Database & Cloud",
-    icon: CloudCog,
-    iconBg: "bg-cobalt-soft",
-    iconColor: "text-cobalt",
-    skills: [
-      "MongoDB",
-      "SQL",
-      "AWS S3",
-      "DigitalOcean",
-      "Docker",
-      "Kafka",
-      "Nginx",
-    ],
+    name: "integrations",
+    core: ["Webhooks", "Stripe"],
+    rest: ["HubSpot APIs", "Event-driven architecture"],
   },
   {
-    label: "Integrations",
-    icon: Plug,
-    iconBg: "bg-coral-soft",
-    iconColor: "text-coral-deep",
-    skills: [
-      "Stripe",
-      "HubSpot APIs",
-      "Webhooks",
-      "Event-Driven Architecture",
-    ],
-  },
-  {
-    label: "Tools & Workflow",
-    icon: Wrench,
-    iconBg: "bg-mint-soft",
-    iconColor: "text-mint-deep",
-    skills: [
-      "Git",
+    name: "workflow",
+    core: ["Git", "SonarQube", "ESBuild"],
+    rest: [
       "GitHub",
-      "SonarQube",
-      "ESBuild",
       "Prettier",
       "GitHub Copilot",
       "Agile Scrum",
-      "Code Reviews",
+      "Code reviews",
     ],
   },
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.45 } },
-};
+const practices = [
+  "Performance optimization",
+  "Requirement gathering",
+  "Client communication",
+  "Mentoring junior developers",
+];
 
 export default function Skills() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="skills" ref={ref} className="section-pad relative">
-      <div className="max-w-7xl mx-auto">
-        {/* Section label */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={inView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="flex items-center gap-3 mb-4"
-        >
-          <span className="text-[11px] font-mono text-muted tracking-[0.3em] uppercase">
-            Stack
-          </span>
-          <div className="flex-1 h-px bg-line max-w-xs" />
-        </motion.div>
+    <section id="skills" ref={ref} className="band relative">
+      <div className="shell">
+        <SectionHead
+          file="package.json"
+          title="Dependencies."
+          lede="Everything below is in production somewhere. The highlighted entries are the ones I reach for most weeks."
+          inView={inView}
+        />
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.1 }}
-          className="mb-14"
-        >
-          <h2 className="font-display text-4xl md:text-5xl font-extrabold tracking-tight text-ink">
-            What I <span className="text-gradient">work with</span>
-          </h2>
-          <p className="text-muted mt-3 max-w-md">
-            The technologies I use to ship production software — from browser
-            to server to desktop.
-          </p>
-        </motion.div>
-
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5"
-        >
-          {categories.map((cat) => (
-            <motion.div key={cat.label} variants={cardVariants}>
-              <TiltCard
-                max={6}
-                className="card shadow-card p-6 hover:shadow-lift transition-shadow duration-300"
-              >
-              {/* Header */}
-              <div className="flex items-center gap-3 mb-5">
-                <span className={`w-10 h-10 rounded-xl ${cat.iconBg} flex items-center justify-center`}>
-                  <cat.icon size={18} className={cat.iconColor} />
-                </span>
-                <div>
-                  <h3 className="font-display text-sm font-bold tracking-wide uppercase text-ink">
-                    {cat.label}
-                  </h3>
-                  <p className="text-muted/70 text-xs mt-0.5">
-                    {cat.skills.length} technologies
-                  </p>
-                </div>
+        <div className="panel overflow-hidden">
+          {manifest.map((group, i) => (
+            <motion.div
+              key={group.name}
+              initial={{ opacity: 0, y: 12 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.45, delay: 0.1 + i * 0.07 }}
+              className={`grid md:grid-cols-[10rem_minmax(0,1fr)_3rem] gap-x-6 gap-y-2 px-5 md:px-7 py-5 ${
+                i > 0 ? "border-t border-edge" : ""
+              }`}
+            >
+              <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-sodium pt-0.5">
+                {group.name}
               </div>
 
-              {/* Divider */}
-              <div className="h-px bg-line mb-5" />
-
-              {/* Pills */}
-              <div className="flex flex-wrap gap-2">
-                {cat.skills.map((skill) => (
+              <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1.5 leading-relaxed">
+                {group.core.map((item) => (
                   <span
-                    key={skill}
-                    className="text-xs font-mono px-3 py-1.5 rounded-full bg-paper border border-line text-ink/80"
+                    key={item}
+                    className="text-chalk font-medium text-[15px]"
                   >
-                    {skill}
+                    {item}
+                  </span>
+                ))}
+                {group.rest.map((item) => (
+                  <span key={item} className="text-ash text-[15px]">
+                    {item}
                   </span>
                 ))}
               </div>
-              </TiltCard>
+
+              <div className="hidden md:block font-mono tnum text-[11px] text-ash text-right pt-1">
+                {group.core.length + group.rest.length}
+              </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Development practices */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.8 }}
-          className="mt-12 flex flex-wrap justify-center gap-3"
+          transition={{ delay: 0.6 }}
+          className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[11px] text-ash"
         >
-          {[
-            "Performance Optimization",
-            "Requirement Gathering",
-            "Client Communication",
-            "Mentoring Junior Developers",
-          ].map((tag) => (
-            <span
-              key={tag}
-              className="text-xs font-mono text-muted border border-line bg-surface px-4 py-2 rounded-full"
-            >
-              {tag}
-            </span>
+          <span className="uppercase tracking-[0.16em] text-edge-strong">
+            Also
+          </span>
+          {practices.map((p) => (
+            <span key={p}>{p}</span>
           ))}
         </motion.div>
       </div>

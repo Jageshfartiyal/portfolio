@@ -11,49 +11,50 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-instrument)", "sans-serif"],
-        display: ["var(--font-bricolage)", "sans-serif"],
-        mono: ["var(--font-jetbrains)", "monospace"],
+        sans: ["var(--font-schibsted)", "system-ui", "sans-serif"],
+        display: ["var(--font-archivo)", "system-ui", "sans-serif"],
+        mono: ["var(--font-plex)", "monospace"],
       },
       colors: {
-        paper: "rgb(var(--c-paper) / <alpha-value>)",
-        surface: "rgb(var(--c-surface) / <alpha-value>)",
-        ink: "rgb(var(--c-ink) / <alpha-value>)",
-        shell: "rgb(var(--c-shell) / <alpha-value>)",
-        muted: "rgb(var(--c-muted) / <alpha-value>)",
-        line: "rgb(var(--c-line) / <alpha-value>)",
-        cobalt: {
-          DEFAULT: "rgb(var(--c-cobalt) / <alpha-value>)",
-          dark: "rgb(var(--c-cobalt-dark) / <alpha-value>)",
-          soft: "var(--c-cobalt-soft)",
+        void: "rgb(var(--c-void) / <alpha-value>)",
+        panel: {
+          DEFAULT: "rgb(var(--c-panel) / <alpha-value>)",
+          raised: "rgb(var(--c-panel-2) / <alpha-value>)",
         },
-        coral: {
-          DEFAULT: "rgb(var(--c-coral) / <alpha-value>)",
-          deep: "rgb(var(--c-coral-deep) / <alpha-value>)",
-          soft: "var(--c-coral-soft)",
+        edge: {
+          DEFAULT: "rgb(var(--c-edge) / <alpha-value>)",
+          strong: "rgb(var(--c-edge-strong) / <alpha-value>)",
         },
-        mint: {
-          DEFAULT: "rgb(var(--c-mint) / <alpha-value>)",
-          deep: "rgb(var(--c-mint-deep) / <alpha-value>)",
-          soft: "var(--c-mint-soft)",
-        },
-        violet: "rgb(var(--c-violet) / <alpha-value>)",
+        chalk: "rgb(var(--c-chalk) / <alpha-value>)",
+        ash: "rgb(var(--c-ash) / <alpha-value>)",
+        sodium: "rgb(var(--c-sodium) / <alpha-value>)",
+        verify: "rgb(var(--c-verify) / <alpha-value>)",
+        strike: "rgb(var(--c-strike) / <alpha-value>)",
+      },
+      borderRadius: {
+        // Precision reads through tight corners — nothing here is pill-soft
+        DEFAULT: "4px",
+        sm: "3px",
+        md: "5px",
+        lg: "6px",
+        xl: "8px",
       },
       boxShadow: {
-        card: "0 1px 2px rgba(5,8,18,0.05), 0 8px 24px -8px rgba(5,8,18,0.10)",
-        lift: "0 2px 4px rgba(5,8,18,0.06), 0 16px 40px -12px rgba(5,8,18,0.20)",
-        window: "0 24px 60px -20px rgba(5,8,18,0.45)",
-        glow: "0 8px 32px -6px rgb(var(--c-cobalt) / 0.45)",
+        bloom: "0 0 80px -20px var(--bloom)",
+        lift: "0 16px 44px -20px var(--drop)",
+      },
+      fontSize: {
+        micro: ["10px", { lineHeight: "1.4", letterSpacing: "0.14em" }],
       },
       animation: {
         float: "float 5s ease-in-out infinite",
-        "spin-slow": "spin 16s linear infinite",
-        "spin-slower": "spin-reverse 24s linear infinite",
+        "spin-slow": "spin 18s linear infinite",
+        "spin-slower": "spin-reverse 26s linear infinite",
       },
       keyframes: {
         float: {
           "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-10px)" },
+          "50%": { transform: "translateY(-8px)" },
         },
         "spin-reverse": {
           from: { transform: "rotate(360deg)" },

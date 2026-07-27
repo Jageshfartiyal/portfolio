@@ -1,36 +1,35 @@
 import type { Metadata, Viewport } from "next";
-import {
-  Bricolage_Grotesque,
-  Instrument_Sans,
-  JetBrains_Mono,
-} from "next/font/google";
+import { Archivo, Schibsted_Grotesk, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-const bricolage = Bricolage_Grotesque({
+// Industrial grotesk — signage weight, used large and sparingly
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-bricolage",
-  weight: ["500", "600", "700", "800"],
+  variable: "--font-archivo",
+  weight: ["600", "700", "800", "900"],
   display: "swap",
 });
 
-const instrument = Instrument_Sans({
+// Prose
+const schibsted = Schibsted_Grotesk({
   subsets: ["latin"],
-  variable: "--font-instrument",
+  variable: "--font-schibsted",
   weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
-const jetbrains = JetBrains_Mono({
+// Machine data — manifests, diffs, labels, versions
+const plex = IBM_Plex_Mono({
   subsets: ["latin"],
-  variable: "--font-jetbrains",
-  weight: ["400", "500", "700"],
+  variable: "--font-plex",
+  weight: ["400", "500", "600"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "Jagesh Singh Fartiyal — Full Stack Software Engineer",
   description:
-    "Full Stack Software Engineer with 4+ years of experience building enterprise SaaS and cross-platform desktop applications with React, TypeScript, Node.js, NestJS, Electron, and MongoDB.",
+    "Full Stack Software Engineer with 4+ years of experience building enterprise SaaS and cross-platform desktop applications with React, TypeScript, Node.js, NestJS, Electron, and MongoDB. Owns the signed release pipeline for a desktop app used by 10,500+ people daily.",
   keywords: [
     "Jagesh Singh Fartiyal",
     "Jagesh Fartiyal",
@@ -66,12 +65,12 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#070B14",
+  themeColor: "#0B0C0B",
 };
 
 // Runs before paint so the stored theme applies without a flash.
-// Dark is the default for first-time visitors.
-const themeInit = `(function(){try{var t=localStorage.getItem("theme");var d=t?t==="dark":true;document.documentElement.classList.toggle("dark",d);}catch(e){document.documentElement.classList.add("dark");}})();`;
+// Exactly one of `dark` / `light` is always present; dark is the default.
+const themeInit = `(function(){try{var t=localStorage.getItem("theme");var d=t?t!=="light":true;var c=document.documentElement.classList;c.toggle("dark",d);c.toggle("light",!d);}catch(e){document.documentElement.classList.add("dark");}})();`;
 
 const personJsonLd = {
   "@context": "https://schema.org",
@@ -119,7 +118,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${bricolage.variable} ${instrument.variable} ${jetbrains.variable}`}
+      className={`dark ${archivo.variable} ${schibsted.variable} ${plex.variable}`}
     >
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />

@@ -2,233 +2,234 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { Mail, Linkedin, Send, MapPin, Phone, ArrowRight } from "lucide-react";
+import { Mail, Linkedin, Github, MapPin, Phone, ArrowUpRight } from "lucide-react";
+import SectionHead from "@/components/SectionHead";
+
+const EMAIL = "jageshfartiyal9720@gmail.com";
+
+const channels = [
+  {
+    icon: Mail,
+    label: "email",
+    value: EMAIL,
+    href: `mailto:${EMAIL}`,
+    external: false,
+  },
+  {
+    icon: Linkedin,
+    label: "linkedin",
+    value: "in/jagesh-fartiyal",
+    href: "https://www.linkedin.com/in/jagesh-fartiyal-23405918b",
+    external: true,
+  },
+  {
+    icon: Github,
+    label: "github",
+    value: "jageshfartiyal",
+    href: "https://github.com/jageshfartiyal",
+    external: true,
+  },
+  {
+    icon: Phone,
+    label: "phone",
+    value: "+91 76689 66682",
+    href: "tel:+917668966682",
+    external: false,
+  },
+];
 
 export default function Contact() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [sent, setSent] = useState(false);
+  const [handoff, setHandoff] = useState<string | null>(null);
+
+  const buildMailto = () => {
+    const subject = encodeURIComponent(
+      form.name ? `Portfolio enquiry from ${form.name}` : "Portfolio enquiry"
+    );
+    const body = encodeURIComponent(
+      `${form.message}\n\n— ${form.name}${form.email ? ` (${form.email})` : ""}`
+    );
+    return `mailto:${EMAIL}?subject=${subject}&body=${body}`;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`Portfolio inquiry from ${form.name}`);
-    const body = encodeURIComponent(
-      `${form.message}\n\n— ${form.name} (${form.email})`
-    );
-    window.location.href = `mailto:jageshfartiyal9720@gmail.com?subject=${subject}&body=${body}`;
-    setSent(true);
-    setTimeout(() => setSent(false), 6000);
-    setForm({ name: "", email: "", message: "" });
+    const url = buildMailto();
+    setHandoff(url);
+    window.location.href = url;
   };
 
-  const inputClass =
-    "w-full bg-paper border border-line rounded-xl px-4 py-3 text-ink text-sm placeholder-muted/50 focus:outline-none focus:border-cobalt focus:ring-2 focus:ring-cobalt/15 transition-all";
+  const field =
+    "w-full bg-void border border-edge rounded px-3.5 py-3 text-chalk text-[15px] placeholder:text-ash/60 focus:outline-none focus:border-sodium transition-colors";
+  const fieldLabel =
+    "block font-mono text-[10px] uppercase tracking-[0.18em] text-ash mb-2";
 
   return (
-    <section id="contact" ref={ref} className="section-pad relative">
-      <div className="max-w-5xl mx-auto">
-        {/* Section label */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={inView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="flex items-center gap-3 mb-4"
-        >
-          <span className="text-[11px] font-mono text-muted tracking-[0.3em] uppercase">
-            Contact
-          </span>
-          <div className="flex-1 h-px bg-line max-w-xs" />
-        </motion.div>
+    <section id="contact" ref={ref} className="band relative">
+      <div className="shell">
+        <SectionHead
+          file="MAINTAINER"
+          title={
+            <>
+              Hiring, or stuck
+              <br />
+              on a release?
+            </>
+          }
+          lede="I'm open to full stack and desktop engineering roles, and happy to talk through a packaging or performance problem either way."
+          inView={inView}
+        />
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.1 }}
-          className="mb-14 text-center"
-        >
-          <h2 className="font-display text-4xl md:text-6xl font-extrabold tracking-tight text-ink mb-4">
-            Let&apos;s build something{" "}
-            <span className="text-gradient">reliable</span> together.
-          </h2>
-          <p className="text-muted text-lg max-w-md mx-auto">
-            Have a role or a project in mind? My inbox is open.
-          </p>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-2 gap-8 items-start">
-          {/* Left — Info */}
+        <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-8 items-start">
+          {/* Channels */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.2 }}
-            className="flex flex-col gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.55, delay: 0.15 }}
           >
-            {/* Email */}
-            <motion.a
-              href="mailto:jageshfartiyal9720@gmail.com"
-              className="card shadow-card p-5 group hover:shadow-lift hover:border-cobalt/40 transition-all duration-300"
-              whileHover={{ x: 4 }}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-cobalt-soft flex items-center justify-center shrink-0">
-                  <Mail size={18} className="text-cobalt" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs text-muted font-mono mb-0.5">Email</p>
-                  <p className="text-ink text-sm font-semibold truncate">
-                    jageshfartiyal9720@gmail.com
-                  </p>
-                </div>
-                <ArrowRight
-                  size={16}
-                  className="text-muted/40 group-hover:text-cobalt group-hover:translate-x-1 transition-all"
-                />
-              </div>
-            </motion.a>
+            <div className="panel overflow-hidden">
+              {channels.map((channel, i) => (
+                <a
+                  key={channel.label}
+                  href={channel.href}
+                  {...(channel.external
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                  className={`row-link flex items-center gap-4 px-5 py-4 ${
+                    i > 0 ? "border-t border-edge" : ""
+                  }`}
+                >
+                  <channel.icon size={16} className="text-ash shrink-0" />
+                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ash w-20 shrink-0">
+                    {channel.label}
+                  </span>
+                  <span className="text-chalk text-[15px] truncate">
+                    {channel.value}
+                  </span>
+                  <ArrowUpRight
+                    size={15}
+                    className="text-edge-strong ml-auto shrink-0"
+                  />
+                </a>
+              ))}
 
-            {/* LinkedIn */}
-            <motion.a
-              href="https://www.linkedin.com/in/jagesh-fartiyal-23405918b"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="card shadow-card p-5 group hover:shadow-lift hover:border-cobalt/40 transition-all duration-300"
-              whileHover={{ x: 4 }}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-cobalt-soft flex items-center justify-center shrink-0">
-                  <Linkedin size={18} className="text-cobalt" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-muted font-mono mb-0.5">LinkedIn</p>
-                  <p className="text-ink text-sm font-semibold">jagesh-fartiyal</p>
-                </div>
-                <ArrowRight
-                  size={16}
-                  className="text-muted/40 group-hover:text-cobalt group-hover:translate-x-1 transition-all"
-                />
+              <div className="flex items-center gap-4 px-5 py-4 border-t border-edge">
+                <MapPin size={16} className="text-ash shrink-0" />
+                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ash w-20 shrink-0">
+                  based in
+                </span>
+                <span className="text-chalk text-[15px]">
+                  Uttarakhand, India
+                </span>
               </div>
-            </motion.a>
+            </div>
 
-            {/* Phone */}
-            <motion.div className="card shadow-card p-5" whileHover={{ x: 4 }}>
-              <div className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-mint-soft flex items-center justify-center shrink-0">
-                  <Phone size={18} className="text-mint-deep" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted font-mono mb-0.5">Phone</p>
-                  <p className="text-ink text-sm font-semibold">+91 7668966682</p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Location */}
-            <motion.div className="card shadow-card p-5" whileHover={{ x: 4 }}>
-              <div className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-coral-soft flex items-center justify-center shrink-0">
-                  <MapPin size={18} className="text-coral-deep" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted font-mono mb-0.5">Location</p>
-                  <p className="text-ink text-sm font-semibold">
-                    Uttarakhand, India
-                  </p>
-                </div>
-              </div>
-            </motion.div>
+            <p className="font-mono text-[11px] text-ash mt-4 leading-relaxed">
+              Usually replies within a day. IST, UTC+5:30.
+            </p>
           </motion.div>
 
-          {/* Right — Contact Form */}
+          {/* Message */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.3 }}
-            className="card shadow-card p-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.55, delay: 0.25 }}
+            className="panel px-6 md:px-8 py-7"
           >
-            <h3 className="font-display text-lg font-bold text-ink mb-6">
-              Send a message
-            </h3>
-
-            {sent ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-12"
-              >
-                <div className="text-4xl mb-3">📬</div>
-                <p className="text-mint-deep font-semibold">
-                  Opening your email client…
+            {handoff ? (
+              <div className="py-6">
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-verify mb-3">
+                  Handed to your email app
                 </p>
-                <p className="text-muted text-sm mt-1">
-                  Hit send there and I&apos;ll get back to you soon.
+                <p className="text-chalk mb-2">
+                  Your message is waiting there, already filled in. Nothing
+                  reaches me until you hit send.
                 </p>
-              </motion.div>
+                <p className="text-ash text-[15px] mb-6">
+                  If nothing opened, email{" "}
+                  <a
+                    href={`mailto:${EMAIL}`}
+                    className="text-sodium underline underline-offset-4"
+                  >
+                    {EMAIL}
+                  </a>{" "}
+                  directly.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setHandoff(null)}
+                  className="font-mono text-[11px] uppercase tracking-[0.14em] text-ash hover:text-chalk transition-colors"
+                >
+                  ← Back to the form
+                </button>
+              </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <div>
-                  <label
-                    htmlFor="contact-name"
-                    className="text-xs font-mono text-muted mb-2 block"
-                  >
-                    NAME
-                  </label>
-                  <input
-                    id="contact-name"
-                    type="text"
-                    required
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    placeholder="Your name"
-                    className={inputClass}
-                  />
+              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <div>
+                    <label htmlFor="contact-name" className={fieldLabel}>
+                      Name
+                    </label>
+                    <input
+                      id="contact-name"
+                      type="text"
+                      required
+                      value={form.name}
+                      onChange={(e) =>
+                        setForm({ ...form, name: e.target.value })
+                      }
+                      placeholder="Your name"
+                      className={field}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="contact-email" className={fieldLabel}>
+                      Email
+                    </label>
+                    <input
+                      id="contact-email"
+                      type="email"
+                      required
+                      value={form.email}
+                      onChange={(e) =>
+                        setForm({ ...form, email: e.target.value })
+                      }
+                      placeholder="you@company.com"
+                      className={field}
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="contact-email"
-                    className="text-xs font-mono text-muted mb-2 block"
-                  >
-                    EMAIL
-                  </label>
-                  <input
-                    id="contact-email"
-                    type="email"
-                    required
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    placeholder="your@email.com"
-                    className={inputClass}
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="contact-message"
-                    className="text-xs font-mono text-muted mb-2 block"
-                  >
-                    MESSAGE
+                  <label htmlFor="contact-message" className={fieldLabel}>
+                    Message
                   </label>
                   <textarea
                     id="contact-message"
                     required
-                    rows={5}
+                    rows={6}
                     value={form.message}
                     onChange={(e) =>
                       setForm({ ...form, message: e.target.value })
                     }
-                    placeholder="Hi Jagesh, I'd like to talk about…"
-                    className={`${inputClass} resize-none`}
+                    placeholder="The role, the team, or the problem you're trying to solve."
+                    className={`${field} resize-none`}
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-cobalt text-white font-semibold text-sm hover:bg-cobalt-dark dark:shadow-glow transition-colors duration-200 mt-2"
+                  className="h-12 rounded bg-sodium text-void font-mono text-[12px] tracking-[0.12em] uppercase font-medium hover:bg-sodium/85 transition-colors"
                 >
-                  <Send size={15} />
-                  Send message
+                  Open in email app
                 </button>
+
+                <p className="font-mono text-[11px] text-ash leading-relaxed">
+                  This fills the message into your own email app — nothing is
+                  sent until you send it there.
+                </p>
               </form>
             )}
           </motion.div>

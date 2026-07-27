@@ -3,11 +3,7 @@
 import { Github, Linkedin, Mail } from "lucide-react";
 
 const socials = [
-  {
-    icon: Github,
-    href: "https://github.com/jageshfartiyal",
-    label: "GitHub",
-  },
+  { icon: Github, href: "https://github.com/jageshfartiyal", label: "GitHub" },
   {
     icon: Linkedin,
     href: "https://www.linkedin.com/in/jagesh-fartiyal-23405918b",
@@ -22,37 +18,30 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="relative bg-shell text-white/60 font-mono text-xs border-t border-line dark:border-white/10">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
-        {/* Status */}
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-mint animate-pulse" />
-            main — build passing
-          </span>
-          <span className="hidden sm:inline text-white/20">|</span>
-          <span className="hidden sm:inline">Uttarakhand, IN</span>
-        </div>
+    <footer className="relative border-t border-edge">
+      <div className="shell px-5 md:px-10 py-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-4 font-mono text-[11px] text-ash">
+        <span className="flex items-center gap-2.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-verify breathe" />
+          main — build passing
+        </span>
 
-        {/* Socials */}
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-5 order-3 sm:order-none w-full sm:w-auto">
           {socials.map((social) => (
             <a
               key={social.label}
               href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...(social.href.startsWith("http")
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
               aria-label={social.label}
-              className="text-white/50 hover:text-white transition-colors duration-200"
+              className="text-ash hover:text-sodium transition-colors"
             >
-              <social.icon size={16} />
+              <social.icon size={15} />
             </a>
           ))}
         </div>
 
-        <span className="text-white/40">
-          © {new Date().getFullYear()} Jagesh Singh Fartiyal
-        </span>
+        <span>© {new Date().getFullYear()} Jagesh Singh Fartiyal</span>
       </div>
     </footer>
   );

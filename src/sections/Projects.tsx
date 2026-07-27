@@ -2,82 +2,114 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { CheckCircle, TrendingUp } from "lucide-react";
-import TiltCard from "@/components/TiltCard";
+import { Users } from "lucide-react";
+import SectionHead from "@/components/SectionHead";
 
-const projects = [
+/*
+  Projects presented as build artifacts. Numeric wins are shown as deltas so
+  they read against the hero's diff; work without a number gets prose instead
+  of an invented metric.
+*/
+type Artifact = {
+  slug: string;
+  name: string;
+  status: string;
+  live: boolean;
+  summary: string;
+  platforms?: string[];
+  reach?: string;
+  deltas?: { value: string; label: string }[];
+  notes?: string[];
+  stack: string[];
+};
+
+const artifacts: Artifact[] = [
   {
-    id: 1,
+    slug: "mera-monitor",
     name: "Mera Monitor",
-    shortName: "MONITOR",
-    description:
-      "Enterprise employee monitoring platform — web plus cross-platform desktop — serving 10,500+ daily active users. Sole technical owner of the Electron app on Windows, macOS, and Linux: packaging, code signing, auto-updates, and production releases.",
-    highlights: [
-      "Initial page load cut from 5+ s to under 1 s",
-      "CPU utilization reduced 40–60% under concurrent load",
-      "Bundle 350 → 191 MB · installer 940 → 545 MB",
+    status: "in production",
+    live: true,
+    summary:
+      "Enterprise employee monitoring platform — web plus a cross-platform desktop client. I'm the sole technical owner of the Electron app: development, packaging, code signing, versioning, releases and production support.",
+    platforms: ["windows", "macos", "linux"],
+    reach: "10,500+ daily active users",
+    deltas: [
+      { value: "↓ 80%", label: "initial load" },
+      { value: "↓ 45%", label: "bundle size" },
+      { value: "↓ 42%", label: "installer" },
+      { value: "↓ 40–60%", label: "cpu under load" },
     ],
-    tech: ["React", "Redux", "Electron.js", "Node.js", "AWS S3", "ESBuild"],
-    status: "In Production",
-    active: true,
-    emoji: "🖥️",
+    stack: ["React", "Redux", "Electron.js", "Node.js", "AWS S3", "ESBuild"],
   },
   {
-    id: 2,
-    name: "IT Asset Management (ITAM)",
-    shortName: "ITAM",
-    description:
-      "Full-stack redesign of a legacy IT Asset Management platform. Led the backend migration from PHP to NestJS and shipped REST APIs alongside React modules for seller and buyer asset workflows.",
-    highlights: [
+    slug: "itam",
+    name: "IT Asset Management",
+    status: "in production",
+    live: true,
+    summary:
+      "Full-stack modernization of a legacy IT asset platform. I led the backend migration off PHP onto NestJS and delivered the REST APIs and React modules behind the seller and buyer asset workflows.",
+    notes: [
       "Legacy PHP backend migrated to NestJS",
-      "Seller & buyer workflows delivered end-to-end",
-      "Webhook-driven data sync across enterprise systems",
+      "Seller and buyer workflows delivered end to end",
+      "Webhook-driven sync across enterprise systems",
     ],
-    tech: ["React", "Node.js", "NestJS", "MongoDB", "REST APIs"],
-    status: "In Production",
-    active: true,
-    emoji: "🗂️",
+    stack: ["React", "Node.js", "NestJS", "MongoDB", "REST APIs"],
   },
   {
-    id: 3,
-    name: "NanoConnect — Enterprise iPaaS",
-    shortName: "NANO",
-    description:
-      "Integration platform connecting business applications through REST APIs and webhook-based, event-driven communication — scoped and delivered in direct collaboration with enterprise clients.",
-    tech: ["Node.js", "React", "REST APIs", "Webhooks"],
-    status: "Delivered",
-    active: false,
-    emoji: "🔗",
+    slug: "nanoconnect",
+    name: "NanoConnect",
+    status: "delivered",
+    live: false,
+    summary:
+      "An enterprise iPaaS connecting business applications over REST and webhook-driven events — scoped and built in direct collaboration with the client teams using it.",
+    stack: ["Node.js", "React", "REST APIs", "Webhooks"],
   },
   {
-    id: 4,
+    slug: "hubspot-backup",
     name: "HubSpot Backup",
-    shortName: "BACKUP",
-    description:
-      "Backup and restore for millions of HubSpot CRM records — scheduled backups, point-in-time recovery, and Stripe subscription billing with tiered plans and automated lifecycle management.",
-    tech: ["Node.js", "HubSpot APIs", "Stripe"],
-    status: "Delivered",
-    active: false,
-    emoji: "💾",
+    status: "delivered",
+    live: false,
+    summary:
+      "Backup and restore for millions of HubSpot CRM records: scheduled backups, point-in-time recovery, and Stripe subscription billing with tiered plans and automated lifecycle handling.",
+    stack: ["Node.js", "HubSpot APIs", "Stripe"],
   },
 ];
 
-function StatusBadge({ status, active }: { status: string; active: boolean }) {
+/*
+  Written out per position rather than composed at runtime: Tailwind only
+  emits classes it can find as literal strings in the source.
+  2 columns on mobile, 4 on desktop — hairlines follow the reflow.
+*/
+const deltaCell = [
+  "pr-4",
+  "pl-4 border-l border-edge",
+  "pr-4 border-t border-edge md:pr-0 md:pl-4 md:border-t-0 md:border-l",
+  "pl-4 border-l border-t border-edge md:border-t-0",
+];
+
+function Status({ status, live }: { status: string; live: boolean }) {
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1 rounded-full ${
-        active
-          ? "bg-mint-soft text-mint-deep border border-mint/20"
-          : "bg-paper text-muted border border-line"
-      }`}
-    >
-      {active ? (
-        <span className="w-1.5 h-1.5 rounded-full bg-mint animate-pulse" />
-      ) : (
-        <CheckCircle size={10} className="opacity-60" />
-      )}
+    <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ash whitespace-nowrap">
+      <span
+        className={`w-1.5 h-1.5 rounded-full ${
+          live ? "bg-verify breathe" : "bg-edge-strong"
+        }`}
+      />
       {status}
     </span>
+  );
+}
+
+function Stack({ items }: { items: string[] }) {
+  return (
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono text-[11px] text-ash">
+      {items.map((item, i) => (
+        <span key={item} className="flex items-center gap-2">
+          {i > 0 && <span className="text-edge-strong">·</span>}
+          {item}
+        </span>
+      ))}
+    </div>
   );
 }
 
@@ -85,146 +117,126 @@ export default function Projects() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
+  const [lead, second, ...rest] = artifacts;
+
   return (
-    <section id="projects" ref={ref} className="section-pad relative">
-      <div className="max-w-7xl mx-auto">
-        {/* Section label */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={inView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="flex items-center gap-3 mb-4"
-        >
-          <span className="text-[11px] font-mono text-muted tracking-[0.3em] uppercase">
-            Projects
-          </span>
-          <div className="flex-1 h-px bg-line max-w-xs" />
-        </motion.div>
+    <section id="projects" ref={ref} className="band relative">
+      <div className="shell">
+        <SectionHead
+          file="/dist"
+          title="Shipped."
+          lede="Four production systems built for enterprise clients, measured in people served and weight removed."
+          inView={inView}
+        />
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.1 }}
-          className="mb-14"
-        >
-          <h2 className="font-display text-4xl md:text-5xl font-extrabold tracking-tight text-ink">
-            Things I&apos;ve <span className="text-gradient">shipped</span>
-          </h2>
-          <p className="text-muted mt-3 max-w-md">
-            Production systems built for enterprise clients — measured in users
-            served and performance gained.
-          </p>
-        </motion.div>
-
-        {/* Bento grid */}
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5 auto-rows-auto">
-          {/* Large cards */}
-          {projects.slice(0, 2).map((project, i) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 24 }}
+        <div className="flex flex-col gap-5">
+          {[lead, second].map((artifact, i) => (
+            <motion.article
+              key={artifact.slug}
+              initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.2 + i * 0.1 }}
-              className="xl:col-span-1"
+              transition={{
+                duration: 0.55,
+                delay: 0.15 + i * 0.1,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="panel overflow-hidden"
             >
-              <TiltCard
-                max={7}
-                className="card shadow-card p-7 group hover:shadow-lift transition-shadow duration-300 overflow-hidden"
-              >
-              {/* Background watermark */}
-              <div className="absolute top-4 right-4 text-7xl font-display font-extrabold text-ink opacity-[0.04] select-none pointer-events-none">
-                {project.shortName}
+              {/* artifact header */}
+              <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 md:px-7 py-3.5 border-b border-edge bg-panel-raised">
+                <span className="font-mono text-[12px] text-chalk">
+                  {artifact.slug}
+                </span>
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+                  {artifact.platforms && (
+                    <span className="hidden sm:flex items-center gap-2 font-mono text-micro uppercase tracking-[0.16em] text-ash">
+                      {artifact.platforms.join(" · ")}
+                    </span>
+                  )}
+                  <Status status={artifact.status} live={artifact.live} />
+                </div>
               </div>
 
-              <div className="relative">
-                <div className="flex items-start justify-between mb-4">
-                  <span className="text-3xl">{project.emoji}</span>
-                  <StatusBadge status={project.status} active={project.active} />
+              <div className="px-5 md:px-7 py-6">
+                <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 mb-3">
+                  <h3 className="display text-[1.75rem] md:text-[2rem] text-chalk">
+                    {artifact.name}
+                  </h3>
+                  {artifact.reach && (
+                    <span className="flex items-center gap-1.5 font-mono text-[11px] text-sodium">
+                      <Users size={12} />
+                      {artifact.reach}
+                    </span>
+                  )}
                 </div>
 
-                <h3 className="font-display text-xl font-bold text-ink mb-2 group-hover:text-cobalt transition-colors">
-                  {project.name}
-                </h3>
-
-                <p className="text-muted text-sm leading-relaxed mb-5">
-                  {project.description}
+                <p className="text-ash leading-relaxed max-w-2xl mb-6">
+                  {artifact.summary}
                 </p>
 
-                {project.highlights && (
-                  <ul className="flex flex-col gap-2 mb-5">
-                    {project.highlights.map((highlight) => (
+                {artifact.deltas && (
+                  <div className="grid grid-cols-2 md:grid-cols-4 border-t border-edge mb-6">
+                    {artifact.deltas.map((delta, j) => (
+                      <div key={delta.label} className={`py-4 ${deltaCell[j]}`}>
+                        <div className="font-mono tnum text-[15px] md:text-[17px] text-verify">
+                          {delta.value}
+                        </div>
+                        <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-ash mt-1.5">
+                          {delta.label}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {artifact.notes && (
+                  <ul className="border-t border-edge mb-6">
+                    {artifact.notes.map((note) => (
                       <li
-                        key={highlight}
-                        className="flex items-center gap-2 text-xs font-mono text-coral-deep"
+                        key={note}
+                        className="flex items-baseline gap-3 py-2.5 border-b border-edge text-[15px] text-chalk/85"
                       >
-                        <TrendingUp size={12} className="shrink-0 opacity-70" />
-                        {highlight}
+                        <span className="text-verify font-mono text-xs shrink-0">
+                          +
+                        </span>
+                        {note}
                       </li>
                     ))}
                   </ul>
                 )}
 
-                <div className="flex flex-wrap gap-2">
-                  {project.tech.map((t) => (
-                    <span
-                      key={t}
-                      className="text-xs font-mono px-2.5 py-1 rounded-md bg-cobalt-soft text-cobalt border border-cobalt/10"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
+                <Stack items={artifact.stack} />
               </div>
-              </TiltCard>
-            </motion.div>
+            </motion.article>
           ))}
 
-          {/* Small cards in a stacked column */}
-          <div className="flex flex-col gap-5 xl:col-span-1 md:col-span-2 xl:row-span-1">
-            {projects.slice(2).map((project, i) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 24 }}
+          {/* Delivered, archived — smaller weight, same system */}
+          <div className="grid md:grid-cols-2 gap-5">
+            {rest.map((artifact, i) => (
+              <motion.article
+                key={artifact.slug}
+                initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.35 + i * 0.1 }}
-                className="flex-1"
+                transition={{ duration: 0.55, delay: 0.35 + i * 0.1 }}
+                className="panel overflow-hidden flex flex-col"
               >
-                <TiltCard
-                  max={7}
-                  className="card shadow-card p-6 group hover:shadow-lift transition-shadow duration-300 overflow-hidden"
-                >
-                <div className="absolute top-3 right-3 text-4xl font-display font-extrabold text-ink opacity-[0.04] select-none pointer-events-none">
-                  {project.shortName}
+                <div className="flex items-center justify-between gap-4 px-5 py-3 border-b border-edge bg-panel-raised">
+                  <span className="font-mono text-[12px] text-chalk">
+                    {artifact.slug}
+                  </span>
+                  <Status status={artifact.status} live={artifact.live} />
                 </div>
 
-                <div className="relative flex gap-4 items-start">
-                  <span className="text-2xl shrink-0">{project.emoji}</span>
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <h3 className="font-display text-base font-bold text-ink group-hover:text-cobalt transition-colors">
-                        {project.name}
-                      </h3>
-                      <StatusBadge status={project.status} active={project.active} />
-                    </div>
-
-                    <p className="text-muted text-xs leading-relaxed mb-3">
-                      {project.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-1.5">
-                      {project.tech.map((t) => (
-                        <span
-                          key={t}
-                          className="text-xs font-mono px-2 py-0.5 rounded bg-cobalt-soft text-cobalt"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                <div className="px-5 py-5 flex flex-col flex-1">
+                  <h3 className="display text-[1.35rem] text-chalk mb-2.5">
+                    {artifact.name}
+                  </h3>
+                  <p className="text-ash text-[15px] leading-relaxed mb-5 flex-1">
+                    {artifact.summary}
+                  </p>
+                  <Stack items={artifact.stack} />
                 </div>
-                </TiltCard>
-              </motion.div>
+              </motion.article>
             ))}
           </div>
         </div>

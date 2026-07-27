@@ -9,34 +9,44 @@ import {
   useReducedMotion,
 } from "framer-motion";
 
+/*
+  Used exactly once, on the signature card — a physical object is the one
+  thing on this page that has earned the right to tilt. The rake light is
+  sodium, matching the page's single light source.
+*/
 type TiltCardProps = {
   children: React.ReactNode;
   className?: string;
   /** Max tilt in degrees */
   max?: number;
+  /**
+   * Specular rake across the surface. Only meaningful on a flat card face —
+   * on a shape with no border radius it clips to a visible square, so turn
+   * it off for free-standing objects.
+   */
   glare?: boolean;
 };
 
 export default function TiltCard({
   children,
   className = "",
-  max = 8,
+  max = 7,
   glare = true,
 }: TiltCardProps) {
   const reduce = useReducedMotion();
   const px = useMotionValue(0.5);
   const py = useMotionValue(0.5);
   const rotateX = useSpring(useTransform(py, [0, 1], [max, -max]), {
-    stiffness: 180,
-    damping: 18,
+    stiffness: 150,
+    damping: 20,
   });
   const rotateY = useSpring(useTransform(px, [0, 1], [-max, max]), {
-    stiffness: 180,
-    damping: 18,
+    stiffness: 150,
+    damping: 20,
   });
-  const glareX = useTransform(px, [0, 1], ["15%", "85%"]);
-  const glareY = useTransform(py, [0, 1], ["15%", "85%"]);
-  const glareBg = useMotionTemplate`radial-gradient(340px circle at ${glareX} ${glareY}, var(--glare), transparent 65%)`;
+  const rakeX = useTransform(px, [0, 1], ["10%", "90%"]);
+  const rakeY = useTransform(py, [0, 1], ["10%", "90%"]);
+  const rake = useMotionTemplate`radial-gradient(420px circle at ${rakeX} ${rakeY}, rgb(var(--c-sodium) / 0.10), transparent 60%)`;
 
   if (reduce) {
     return <div className={`relative ${className}`}>{children}</div>;
@@ -54,7 +64,7 @@ export default function TiltCard({
   };
 
   return (
-    <div style={{ perspective: "1000px" }} className="h-full">
+    <div style={{ perspective: "1200px" }} className="h-full">
       <motion.div
         onMouseMove={handleMove}
         onMouseLeave={reset}
@@ -66,7 +76,7 @@ export default function TiltCard({
           <motion.div
             aria-hidden
             className="pointer-events-none absolute inset-0 rounded-[inherit]"
-            style={{ background: glareBg }}
+            style={{ background: rake }}
           />
         )}
       </motion.div>
